@@ -28,9 +28,9 @@ public class CardDeliveryTest {
     void shouldSuccessfulPlanAndReplanMeeting() {
         var validUser = DataGenerator.Registration.generateUser("ru");
         var daysToAddForFirstMeeting = 4;
-        var firstMeetingDate = generateDate(daysToAddForFirstMeeting);
+        var firstMeetingDate = DataGenerator.generateDate(daysToAddForFirstMeeting);
         var daysToAddForSecondMeeting = 7;
-        var secondMeetingDate = generateDate(daysToAddForSecondMeeting);
+        var secondMeetingDate = DataGenerator.generateDate(daysToAddForSecondMeeting);
         $("[data-test-id='city'] input").setValue(validUser.getCity());
         $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.DELETE);
         $("[data-test-id='date'] input").setValue(firstMeetingDate);
@@ -38,12 +38,8 @@ public class CardDeliveryTest {
         $("[data-test-id='phone'] input").setValue(validUser.getPhone());
         $("[data-test-id='agreement']").click();
         $("button.button").click();
-//        $(byText("Успешно!")).shouldBe(visible, Duration.ofSeconds(15));
-//        $("[data-test-id='success-notification'] .notification__content")
-//                .shouldHave(Condition.exactText("Встреча успешно забронирована на" + firstMeetingDate));
-        $(".notification__content")
-                .shouldBe(visible, Duration.ofSeconds(15))
-                .shouldHave(Condition.exactText("Встреча успешно забронирована на" + firstMeetingDate));
+        $("[data-test-id=success-notification]").shouldHave(Condition.exactText("Успешно! " +
+                "Встреча успешно запланирована на " + firstMeetingDate), Duration.ofSeconds(10)).shouldBe(visible);
         $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.DELETE);
         $("[data-test-id='date'] input").setValue(secondMeetingDate);
         $("button.button").click();
