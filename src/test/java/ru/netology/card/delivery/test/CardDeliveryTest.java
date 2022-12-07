@@ -1,9 +1,9 @@
 package ru.netology.card.delivery.test;
 
 import com.codeborne.selenide.Condition;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.selenide.AllureSelenide;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.Keys;
 import ru.netology.data.DataGenerator;
 
@@ -17,6 +17,16 @@ import static ru.netology.data.DataGenerator.generateDate;
 
 
 public class CardDeliveryTest {
+
+    @BeforeAll
+    static void setUpAll() {
+        SelenideLogger.addListener("allure", new AllureSelenide());
+    }
+
+    @AfterAll
+    static void tearDownAll() {
+        SelenideLogger.removeListener("allure");
+    }
 
     @BeforeEach
     void setup() {
@@ -44,17 +54,12 @@ public class CardDeliveryTest {
         $("[data-test-id='date'] input").setValue(secondMeetingDate);
         $("button.button").click();
         $("[data-test-id='replan-notification'] .notification__content").shouldHave(Condition.text
-                ("У вас уже запланирована встреча на другую дату. Перепланировать?"),
+                        ("У вас уже запланирована встреча на другую дату. Перепланировать?"),
                 Duration.ofSeconds(10)).shouldBe(Condition.visible);
         $$("button").find(Condition.exactText("Перепланировать")).click();
         $("[data-test-id='success-notification']").shouldHave(Condition.exactText("Успешно! " +
-                "Встреча успешно запланирована на " + secondMeetingDate),
+                        "Встреча успешно запланирована на " + secondMeetingDate),
                 Duration.ofSeconds(10)).shouldBe(Condition.visible);
-        // TODO: добавить логику теста в рамках которого будет выполнено планирование и перепланирование встречи.
-        // Для заполнения полей формы можно использовать пользователя validUser и строки с датами в переменных
-        // firstMeetingDate и secondMeetingDate. Можно также вызывать методы generateCity(locale),
-        // generateName(locale), generatePhone(locale) для генерации и получения в тесте соответственно города,
-        // имени и номера телефона без создания пользователя в методе generateUser(String locale) в датагенераторе
-    }
 
+    }
 }
